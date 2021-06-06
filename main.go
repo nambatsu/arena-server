@@ -52,21 +52,19 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(session.Middleware(store))
 
-	e.GET("/hello/:username", func(c echo.Context) error {
-		userID := c.Param("username")
-		return c.String(http.StatusOK, "Hello,"+userID+".\n")
-	})
-
 	e.POST("/post", POST)
 	e.POST("/login", login)
 	e.POST("/signup", SignUp)
-	e.GET("/json", JSON)
 	e.GET("/logout", logout)
 
 	withLogin := e.Group("")
 	withLogin.Use(checkLogin)
 	withLogin.GET("/json", JSON)
 	withLogin.GET("/whoami", whoami)
+	withLogin.GET("/hello/:username", func(c echo.Context) error {
+		userID := c.Param("username")
+		return c.String(http.StatusOK, "Hello,"+userID+".\n")
+	})
 
 	e.Start(":4000")
 }
