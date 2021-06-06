@@ -76,6 +76,15 @@ type LoginRequestBody struct {
 	Password string `json:"password,omitempty" form:"password"`
 }
 
+type SignUpRequestBody struct {
+	Name                    string `json:"name,omitempty" form:"name"`
+	Username                string `json:"userID,omitempty" form:"userID"`
+	Password                string `json:"password,omitempty" form:"password"`
+	Shudan_jikyu            string `json:"shudan_jikyu,omitempty" form:"shudan_jikyu"`
+	Kobetsu_jikyu           string `json:"kobetsu_jikyu,omitempty" form:"kobetsu_jikyu"`
+	Transportation_expenses string `json:"Transportation_expenses,omitempty" form:"Transportation_expenses"`
+}
+
 func JSON(c echo.Context) error {
 	res := Jsondata{
 		Number: 10,
@@ -97,7 +106,7 @@ func POST(c echo.Context) error {
 }
 
 func SignUp(c echo.Context) error {
-	req := LoginRequestBody{}
+	req := SignUpRequestBody{}
 	c.Bind(&req)
 
 	if req.Password == "" || req.Username == "" {
@@ -121,7 +130,7 @@ func SignUp(c echo.Context) error {
 		return c.String(http.StatusConflict, "ユーザーが既に存在しています")
 	}
 
-	_, err = db.Exec("INSERT INTO users (username, hashedpass) VALUES (?, ?)", req.Username, hashedPass)
+	_, err = db.Exec("INSERT INTO teacher_information (name, userID, hashed_pass, shudan_jikyu, kobetsu_jikyu, transportation_expenses) VALUES (?, ?, ?, ?, ?, ?)", req.Name, req.Username, hashedPass, req.Shudan_jikyu, req.Kobetsu_jikyu, req.Transportation_expenses)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("db error: %v", err))
 	}
