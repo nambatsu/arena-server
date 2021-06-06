@@ -68,7 +68,7 @@ func main() {
 	withLogin.GET("/json", JSON)
 	withLogin.GET("/whoami", whoami)
 
-	e.Start(":4000") // ここを前述の通り自分のポートにすること
+	e.Start(":4000")
 }
 
 type LoginRequestBody struct {
